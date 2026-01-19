@@ -1,0 +1,27 @@
+# Environment variables
+.env
+
+# Credentials
+credentials.json
+
+# Dataset
+swiggy_file.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Streamlit
+.streamlit/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

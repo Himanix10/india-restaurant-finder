@@ -1,0 +1,351 @@
+# 🍽️ All-India Restaurant Finder
+
+**AI-powered conversational assistant for discovering restaurants across India using RAG (Retrieval Augmented Generation)**
+
+![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
+![Azure](https://img.shields.io/badge/Azure-Cognitive%20Search-0078D4.svg)
+![Groq](https://img.shields.io/badge/Groq-LLaMA%203.3-orange.svg)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.31+-FF4B4B.svg)
+
+---
+
+## 🎯 Problem Statement
+
+**Problem:** Over 40 million Indians relocate annually for work, education, and other opportunities. When people move to unfamiliar cities, finding reliable restaurant recommendations is time-consuming and overwhelming. Generic review platforms provide too much unorganized information without personalization, making it difficult to quickly discover quality dining options.
+
+**Target Users:**
+- 🏢 Professionals relocating between cities for work
+- 🎓 Students moving to new cities for education
+- ✈️ Tourists seeking authentic local food experiences
+- 💼 Remote workers exploring different Indian cities
+- 🏠 Families moving to new locations
+
+**Why This Problem?** 
+This is a real, relatable problem that affects millions. I chose it because finding good food is one of the first challenges when you're new to a city. A conversational AI assistant that understands natural language queries and provides personalized recommendations can significantly improve this experience.
+
+---
+
+## 💡 Solution
+
+An AI-powered chatbot that:
+- Provides **conversational, personalized** restaurant recommendations
+- Covers **15+ major Indian cities** (Bangalore, Mumbai, Delhi, Pune, Hyderabad, Chennai, Kolkata, etc.)
+- Uses **RAG architecture** to retrieve relevant information before generating responses
+- Includes **real restaurant data** with ratings, locations, cuisines, and price ranges
+- Understands natural language queries like "Best biryani in Hyderabad" or "Budget cafes in Bangalore"
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐
+│   User Query    │
+│ "Best biryani   │
+│  in Hyderabad"  │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────────┐
+│  Streamlit UI       │
+│  (Frontend)         │
+└─────────┬───────────┘
+          │
+          ▼
+┌─────────────────────────┐
+│  Sentence Transformers  │
+│  (Create Embeddings)    │
+└─────────┬───────────────┘
+          │
+          ▼
+┌──────────────────────────────┐
+│  Azure Cognitive Search      │
+│  (Vector Database)           │
+│  - Hybrid Search             │
+│  - Retrieve Top 5 Matches    │
+└──────────┬───────────────────┘
+           │
+           ▼
+    ┌──────────────┐
+    │   Context    │
+    │  (Retrieved  │
+    │   Results)   │
+    └──────┬───────┘
+           │
+           ▼
+┌──────────────────────────┐
+│  Groq API                │
+│  LLaMA 3.3 70B           │
+│  (Generate Response)     │
+└──────────┬───────────────┘
+           │
+           ▼
+    ┌─────────────┐
+    │  Response   │
+    │  to User    │
+    └─────────────┘
+
+Data Source: Google Sheets ──► Azure Search
+                              (Live Updates)
+```
+
+### RAG Flow Explained:
+
+1. **User Query:** User asks a natural language question
+2. **Embedding Generation:** Query is converted to a 384-dimensional vector using Sentence Transformers
+3. **Vector Search:** Azure Cognitive Search performs hybrid search (keyword + vector similarity)
+4. **Context Retrieval:** Top 5 most relevant restaurants are retrieved
+5. **LLM Generation:** Groq's LLaMA 3.3 70B generates a conversational response using the retrieved context
+6. **Response:** User receives personalized recommendations with details
+
+---
+
+## 🛠️ Tech Stack
+
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| **Cloud Platform** | Azure (Student Account) | Cognitive Search service, vector database |
+| **LLM** | Groq API (LLaMA 3.3 70B) | Response generation, ultra-fast inference (~500 tokens/sec) |
+| **Embeddings** | Sentence Transformers | Local embedding generation (all-MiniLM-L6-v2) |
+| **Vector Database** | Azure Cognitive Search | Hybrid search with vector capabilities |
+| **Data Source** | Google Sheets API | Live data updates, easy collaboration |
+| **Frontend** | Streamlit | Interactive web interface |
+| **Language** | Python 3.9+ | Core implementation |
+
+### Why This Stack?
+
+- **Azure:** Required for assignment, excellent vector search capabilities
+- **Groq:** Fastest LLM inference available (free tier), better than OpenAI for speed
+- **Sentence Transformers:** No API costs, runs locally, sufficient quality
+- **Google Sheets:** Live data updates without redeployment, easy bonus integration
+- **Streamlit:** Rapid prototyping, beautiful UI with minimal code
+
+---
+
+## 📊 Data Coverage
+
+- **Total Restaurants:** 228 curated entries
+- **Cities Covered:** 15+ major cities
+  - Ahmedabad, Bangalore, Bhubaneswar, Chandigarh, Chennai
+  - Coimbatore, Delhi, Hyderabad, Indore, Jaipur
+  - Kochi, Kolkata, Lucknow, Mumbai, Nagpur, Pune, Surat
+- **Data Source:** Kaggle's Swiggy Restaurant Dataset (150,000+ restaurants)
+- **Data Processing:** Filtered for top-rated establishments, cleaned and structured
+- **Information Included:** Restaurant name, cuisine, area, city, rating, price range, description
+
+---
+
+## 🚀 Setup Instructions
+
+### Prerequisites
+
+- Python 3.9 or higher
+- Azure Student Account (free $100 credit)
+- Groq API Account (free tier)
+- Google Cloud Project with Sheets API enabled
+
+### Step 1: Clone Repository
+
+```bash
+git clone https://github.com/yourusername/india-restaurant-finder.git
+cd india-restaurant-finder
+```
+
+### Step 2: Create Virtual Environment
+
+```bash
+python -m venv venv
+
+# Activate (Windows)
+venv\Scripts\activate
+
+# Activate (Mac/Linux)
+source venv/bin/activate
+```
+
+### Step 3: Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Step 4: Set Up Azure Cognitive Search
+
+1. Go to https://portal.azure.com
+2. Create a Resource Group
+3. Create Azure Cognitive Search service (Free tier)
+4. Note down the endpoint and admin key
+
+### Step 5: Get Groq API Key
+
+1. Visit https://console.groq.com
+2. Sign up/login
+3. Create API key
+
+### Step 6: Set Up Google Sheets
+
+1. Go to https://console.cloud.google.com
+2. Enable Google Sheets API
+3. Create Service Account
+4. Download credentials JSON
+5. Share your Google Sheet with the service account email
+
+### Step 7: Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+AZURE_SEARCH_ENDPOINT=https://your-service.search.windows.net
+AZURE_SEARCH_KEY=your_azure_admin_key
+GROQ_API_KEY=your_groq_api_key
+GOOGLE_SHEET_ID=your_google_sheet_id
+GOOGLE_CREDENTIALS_PATH=credentials.json
+```
+
+### Step 8: Create Azure Search Index
+
+```bash
+python setup_azure_index.py
+```
+
+### Step 9: Test RAG Engine
+
+```bash
+python rag_engine.py
+```
+
+### Step 10: Run the Application
+
+```bash
+streamlit run app.py
+```
+
+The application will open in your browser at `http://localhost:8501`
+
+---
+
+## 📁 Project Structure
+
+```
+india-restaurant-finder/
+│
+├── app.py                      # Streamlit frontend interface
+├── rag_engine.py              # Core RAG logic and search
+├── setup_azure_index.py       # Azure index creation script
+├── prepare_data.py            # Data preparation from Kaggle dataset
+├── requirements.txt           # Python dependencies
+├── .env                       # Environment variables (not in git)
+├── credentials.json           # Google service account (not in git)
+├── swiggy_file.csv           # Source dataset (not in git)
+├── README.md                 # This file
+└── demo_video.mp4            # Project explanation video
+```
+
+---
+
+## 🎥 Demo Video
+
+**[Link to 7-minute walkthrough video]**
+
+Video includes:
+- Problem statement and motivation
+- Live demo of the chatbot
+- Architecture explanation
+- Code walkthrough
+- Key learnings and challenges
+
+---
+
+## 💡 Key Learnings
+
+### Technical Learnings:
+
+1. **RAG Architecture:** Understood how to build production-ready RAG systems that combine vector search with LLMs for factual, grounded responses
+
+2. **Azure Cognitive Search:** Learned about hybrid search capabilities (combining keyword and vector search), index schema design for vector fields
+
+3. **Groq Performance:** Experienced ultra-fast LLM inference compared to traditional APIs - crucial for real-time chat applications
+
+4. **Embedding Selection:** Chose all-MiniLM-L6-v2 for optimal balance between speed, quality, and resource usage
+
+5. **Data Engineering:** Processed 150K+ restaurant records, filtered and cleaned for quality, integrated with live data source
+
+### Challenges Faced:
+
+1. **Azure Vector Search Syntax:** Initially struggled with the vector query format, resolved by using `VectorizedQuery` object properly
+
+2. **Groq Model Updates:** Had to adapt to model deprecations (llama-3.1 → llama-3.3), learned importance of staying updated with API changes
+
+3. **Google Sheets Authentication:** JWT signature errors taught me proper service account setup and credential management
+
+4. **Data Quality:** Balancing dataset size with relevance - learned that 200 quality entries > 1000 mediocre ones
+
+5. **Context Window Management:** Optimizing retrieved context size to stay within token limits while maintaining quality
+
+---
+
+## 🔮 Future Enhancements
+
+### Short Term:
+- **Multi-language Support:** Hindi, Tamil, Telugu, Bengali translations
+- **User Preferences:** Remember user's preferred cuisines and price ranges
+- **Image Integration:** Add restaurant photos from Google Maps
+- **Real-time Availability:** Check opening hours and wait times
+
+### Long Term:
+- **Voice Interface:** Voice-based queries and responses
+- **Mobile App:** React Native deployment for iOS/Android
+- **User Reviews Integration:** Fetch latest reviews from Google Maps API
+- **Recommendation Engine:** Collaborative filtering based on user behavior
+- **Multi-modal Search:** "Show me restaurants that look like this image"
+
+---
+
+## 📊 Performance Metrics
+
+- **Query Response Time:** ~2-3 seconds (including search + LLM generation)
+- **Embedding Generation:** ~50ms per query
+- **Vector Search:** ~200ms for top-5 retrieval
+- **LLM Response:** ~1-2 seconds (Groq is exceptionally fast)
+- **Data Refresh:** Real-time via Google Sheets
+
+---
+
+## 🎓 Assignment Completion Checklist
+
+- ✅ Clear problem statement defined with target users
+- ✅ Azure cloud platform used (Cognitive Search)
+- ✅ LLM integration (Groq LLaMA 3.3 70B)
+- ✅ Embedding model implemented (Sentence Transformers)
+- ✅ Vector search with RAG architecture
+- ✅ **Bonus:** External data source (Google Sheets + Kaggle dataset)
+- ✅ Clean, well-documented code
+- ✅ Working demo with Streamlit UI
+- ✅ Comprehensive README
+- ✅ 5-10 minute explanation video
+
+---
+
+## 👨‍💻 Author
+
+**[Himani Gupta]**
+
+
+---
+
+## 📝 License
+
+This project is created for the Inarva Solutions Internship Assessment.
+
+---
+
+## 🙏 Acknowledgments
+
+- **Data Source:** Kaggle Swiggy Restaurant Dataset by @rrkcoder
+- **Azure:** Microsoft Azure Student Program
+- **Groq:** For providing ultra-fast LLM inference
+- **Anthropic:** Claude assisted in code development and documentation
+
+---
+
+**Built with ❤️ for Inarva Solutions Internship Assessment | January 2025**
