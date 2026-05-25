@@ -1,44 +1,28 @@
 # MODULES
 ## Overview
-The India Restaurant Finder project consists of several modules, each responsible for a specific functionality. This document provides an overview of the purpose and functionality of each module.
+The project consists of several modules, each serving a specific purpose in the India Restaurant Finder application. This document provides an overview of the classes and functions in each module.
 
 ## app.py
-### Purpose
-The `app.py` module is the main entry point of the application. It contains a single function, `init_rag`, which is used to initialize the RAG engine.
-
 ### Functions
 * `init_rag`: Initializes the RAG engine.
 
 ## prepare_data.py
-### Purpose
-The `prepare_data.py` module is responsible for preparing and uploading data to Google Sheets. It contains two functions: `prepare_swiggy_data` and `upload_to_google_sheets`.
-
 ### Functions
 * `prepare_swiggy_data`: Cleans and filters the Swiggy dataset.
 * `upload_to_google_sheets`: Uploads data to Google Sheets.
 
 ## rag_engine.py
-### Purpose
-The `rag_engine.py` module contains the `RAGEngine` class, which is responsible for loading data from Google Sheets, creating a vector index, and processing user queries.
-
 ### Classes
-* `RAGEngine`: The RAG engine class.
+* `RAGEngine`: The RAG engine class, responsible for processing user queries.
 	+ Methods:
-		- `__init__`: Initializes the RAG engine.
+		- `__init__`: Initializes the RAGEngine instance.
 		- `_load_google_sheet_data`: Loads data from Google Sheets.
 		- `_load_and_index_data`: Loads data from Google Sheets and creates a vector index.
 		- `query`: Processes a user query with RAG.
 
 ## setup_azure_index.py
-### Purpose
-The `setup_azure_index.py` module is responsible for creating an Azure Cognitive Search index with vector search capability.
-
 ### Functions
 * `create_search_index`: Creates an Azure Cognitive Search index with vector search capability.
 
-## test.py
-### Purpose
-The `test.py` module is used for testing the application. It currently contains no functions.
-
-### Functions
-None
+## Module Interactions
+The modules interact with each other to provide the functionality of the India Restaurant Finder application. The `prepare_data.py` module prepares the Swiggy dataset and uploads it to Google Sheets. The `rag_engine.py` module uses this data to process user queries. The `setup_azure_index.py` module creates an Azure Cognitive Search index for vector search capability. The `app.py` module initializes the RAG engine.
